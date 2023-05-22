@@ -1,6 +1,7 @@
 package controllers
 
 import (
+	"fmt"
 	"github.com/erp_app/helper"
 	"github.com/erp_app/request"
 	"github.com/erp_app/response"
@@ -21,12 +22,14 @@ func (categoryController *CategoryController) GetAll(ctx echo.Context) error {
 	getAllRequestCategory := request.GetAllRequestCategory{}
 	err := ctx.Bind(&getAllRequestCategory)
 	if err != nil {
+		fmt.Println("error binding")
 		apiResponse := response.NewApiResponse("error", "failed get all category", err.Error())
 		return ctx.JSON(500, apiResponse)
 	}
 
 	err = ctx.Validate(&getAllRequestCategory)
 	if err != nil {
+		fmt.Println("error validate")
 		errorValidation := helper.FormatErrorValidation(err.(validator.ValidationErrors))
 		apiResponse := response.NewApiResponse("error", "failed get all category", errorValidation)
 		return ctx.JSON(422, apiResponse)
@@ -34,6 +37,7 @@ func (categoryController *CategoryController) GetAll(ctx echo.Context) error {
 
 	listCategoryResponse, err := categoryController.CategoryService.GetAll(getAllRequestCategory)
 	if err != nil {
+		fmt.Println("error service")
 		apiResponse := response.NewApiResponse("error", "failed get all category", err.Error())
 		return ctx.JSON(400, apiResponse)
 	}
